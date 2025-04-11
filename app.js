@@ -64,7 +64,7 @@ function handlePagination() {
   // previous page
   if (prevPage) {
     let prevBtn = document.createElement("button");
-    prevBtn.textContent = "Prev Page";
+    prevBtn.textContent = "< Prev Page";
     prevBtn.addEventListener("click", () => {
       currPage = prevPage;
       handleFetchData(prevPage);
@@ -74,7 +74,7 @@ function handlePagination() {
   // next page
   if (nextPage) {
     let nextBtn = document.createElement("button");
-    nextBtn.textContent = "next Page";
+    nextBtn.textContent = "next Page >";
     nextBtn.addEventListener("click", () => {
       currPage = nextPage;
       handleFetchData(nextPage);
