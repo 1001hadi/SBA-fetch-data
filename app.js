@@ -1,5 +1,7 @@
 const tableBody = document.getElementById("table-body");
 const paginationEl = document.getElementById("pagination");
+const searchBtn = document.getElementById("search-btn");
+const searchInput = document.getElementById("input");
 
 const baseUrl = "https://swapi.dev/api/people/";
 
@@ -25,20 +27,20 @@ async function handleFetchData(url) {
       nextPage = data.next;
       prevPage = data.previous;
 
-      data.results.forEach((person) => {
+      data.results.forEach((character) => {
         // Fetch homeworld and species data with Promise.all
         Promise.all([
-          fetch(person.homeworld).then((response) => response.json()),
-          person.species.length > 0
-            ? fetch(person.species[0]).then((response) => response.json())
-            : Promise.resolve({ name: "Unknown" }),
+          fetch(character.homeworld).then((response) => response.json()),
+          character.species.length > 0
+            ? fetch(character.species[0]).then((response) => response.json())
+            : Promise.resolve({ name: "unknown" }),
         ]).then(([homeworldData, speciesData]) => {
           const tableRow = document.createElement("tr");
           tableRow.innerHTML = `
-                      <td>${person.name}</td>
-                      <td>${person.birth_year}</td>
-                      <td>${person.height}</td>
-                      <td>${person.mass}kg</td>
+                      <td>${character.name}</td>
+                      <td>${character.birth_year}</td>
+                      <td>${character.height}</td>
+                      <td>${character.mass}kg</td>
                       <td>${homeworldData.name}</td>
                       <td>${speciesData.name}</td>
                   `;
@@ -82,3 +84,41 @@ function handlePagination() {
     paginationEl.appendChild(nextBtn);
   }
 }
+
+// attach eventListener to search button
+// get the search value of input
+// if there is searched character
+// fetch the base url and return then searched data
+// create result var and assign it to the returned character name
+// in next step create handle search and assign result var to it as parameter
+// clear the paginationEl after search completed
+// don't forget to catch the Error
+// else reset to original fetched page if search is empty
+
+searchBtn.addEventListener("click", handleSearchBtn);
+
+function handleSearchBtn() {
+  let searchedChar = searchInput.value.toLowerCase();
+  console.log(searchedChar);
+  if (searchedChar) {
+    fetch(baseUrl)
+      .then((res) => res.json())
+      .then((data) => {
+        let result = data.results.filter((character) =>
+          character.name.toLowerCase().includes(searchedChar)
+        );
+        handleSearch(result);
+        paginationEl.innerHTML = "";
+      })
+      .catch((err) => console.log("error from API", err));
+  } else {
+    handleFetchData(currPage);
+  }
+}
+
+// handle search function
+// clear table body content
+// after looping on entered search value
+// fetch data again for the result of search
+// create new table row for the result
+// add the result to table body
