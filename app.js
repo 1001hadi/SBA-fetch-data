@@ -7,9 +7,17 @@ async function handleFetchData() {
   await fetch(baseUrl)
     .then((response) => response.json())
     .then((data) => {
-      console.log(data.results);
+      data.results.forEach((person) => {
+        // Fetch homeworld and species data with Promise.all
+        Promise.all([
+          fetch(person.homeworld).then((response) => response.json()),
+          person.species.length > 0
+            ? fetch(person.species[0]).then((response) => response.json())
+            : Promise.resolve({ name: "Unknown" }),
+        ]).then(([homeworldData, speciesData]) => {
+          console.log(homeworldData, speciesData);
+        });
+      });
     })
-    .catch((error) => console.error("Error from API:", error));
+    .catch((err) => console.error("Error from API:", err));
 }
-
-
