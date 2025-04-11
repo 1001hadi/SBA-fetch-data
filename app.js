@@ -1,4 +1,6 @@
 const tableBody = document.getElementById("table-body");
+const paginationEl = document.getElementById("pagination");
+
 const baseUrl = "https://swapi.dev/api/people/";
 
 document.addEventListener("DOMContentLoaded", handleFetchData);
