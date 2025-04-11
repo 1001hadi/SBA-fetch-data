@@ -99,7 +99,7 @@ searchBtn.addEventListener("click", handleSearchBtn);
 
 function handleSearchBtn() {
   let searchedChar = searchInput.value.toLowerCase();
-  console.log(searchedChar);
+  // console.log(searchedChar);
   if (searchedChar) {
     fetch(baseUrl)
       .then((res) => res.json())
@@ -122,3 +122,30 @@ function handleSearchBtn() {
 // fetch data again for the result of search
 // create new table row for the result
 // add the result to table body
+
+async function handleSearch(searchResult) {
+  tableBody.innerHTML = "";
+  for (const character of searchResult) {
+    try {
+      const [homeworldData, speciesData] = await Promise.all([
+        fetch(character.homeworld).then((res) => res.json()),
+        character.species.length > 0
+          ? fetch(character.species[0]).then((res) => res.json())
+          : Promise.resolve({ name: "unknown" }),
+      ]);
+
+      const tableRow = document.createElement("tr");
+      tableRow.innerHTML = `
+            <td>${character.name}</td>
+            <td>${character.birth_year}</td>
+            <td>${character.height}</td>
+            <td>${character.mass}kg</td>
+            <td>${homeworldData.name}</td>
+            <td>${speciesData.name}</td>
+        `;
+      tableBody.appendChild(tableRow);
+    } catch (err) {
+      console.log("can't fetching data for character:", character.name, err);
+    }
+  }
+}
