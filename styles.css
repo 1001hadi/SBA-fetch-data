@@ -21,6 +21,29 @@ body {
   width: 100%;
 }
 
+#search input {
+  padding: 8px 15px;
+  border: 1px solid #555;
+  border-radius: 3px;
+  width: 100%;
+  margin-right: 20px;
+}
+
+#search button {
+  padding: 8px 20px;
+  background: steelblue;
+  color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+}
+
+#search button:hover {
+  background: rgb(9, 102, 179);
+}
+
 table {
   border-collapse: collapse;
   width: 100%;
@@ -44,15 +67,15 @@ td {
   margin: 0 5px;
   border: 1px solid #ccc;
   background-color: steelblue;
+  color: #fff;
   cursor: pointer;
   border-radius: 5px;
   font-size: 16px;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.2s ease;
 }
 
 #pagination button:hover {
-  background-color: rgb(87, 155, 211);
-  color: #fff;
+  background-color: rgb(25, 129, 214);
 }
 
 #pagination button:disabled {
