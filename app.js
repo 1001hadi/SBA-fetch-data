@@ -1,15 +1,15 @@
-const tableRow = document.getElementById("table-row");
-const baseUrl = "https://swapi.dev/api/people/?page=1";
+const tableBody = document.getElementById("table-body");
+const baseUrl = "https://swapi.dev/api/people/";
 
-async function getPeople() {
-  const data = await fetch(baseUrl)
-    .then((res) => res.json())
-    .then((res) => {
-      console.log(res.results);
+document.addEventListener("DOMContentLoaded", handleFetchData);
+
+async function handleFetchData() {
+  await fetch(baseUrl)
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data.results);
     })
-    .catch((err) => {
-      console.log(err);
-    });
-
+    .catch((error) => console.error("Error from API:", error));
 }
-getPeople();
+
+
