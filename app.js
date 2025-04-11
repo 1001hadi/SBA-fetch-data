@@ -15,7 +15,16 @@ async function handleFetchData() {
             ? fetch(person.species[0]).then((response) => response.json())
             : Promise.resolve({ name: "Unknown" }),
         ]).then(([homeworldData, speciesData]) => {
-          console.log(homeworldData, speciesData);
+          const tableRow = document.createElement("tr");
+          tableRow.innerHTML = `
+                      <td>${person.name}</td>
+                      <td>${person.birth_year}</td>
+                      <td>${person.height}</td>
+                      <td>${person.mass}kg</td>
+                      <td>${homeworldData.name}</td>
+                      <td>${speciesData.name}</td>
+                  `;
+          tableBody.appendChild(tableRow);
         });
       });
     })
