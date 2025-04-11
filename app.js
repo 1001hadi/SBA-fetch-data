@@ -97,20 +97,32 @@ function handlePagination() {
 
 searchBtn.addEventListener("click", handleSearchBtn);
 
-function handleSearchBtn() {
+async function handleSearchBtn() {
   let searchedChar = searchInput.value.toLowerCase();
   // console.log(searchedChar);
   if (searchedChar) {
-    fetch(baseUrl)
-      .then((res) => res.json())
-      .then((data) => {
-        let result = data.results.filter((character) =>
-          character.name.toLowerCase().includes(searchedChar)
-        );
-        handleSearch(result);
-        paginationEl.innerHTML = "";
-      })
-      .catch((err) => console.log("error from API", err));
+    let searchedArr = [];
+    let nextUrl = baseUrl;
+    // console.log(searchedArr);
+
+    try {
+      while (nextUrl) {
+        const response = await fetch(nextUrl);
+        const data = await response.json();
+        searchedArr.push(...data.results);
+        nextUrl = data.next;
+      }
+
+      const result = searchedArr.filter((character) =>
+        character.name.toLowerCase().includes(searchedChar)
+      );
+      console.log(result);
+
+      handleSearch(result);
+      paginationEl.innerHTML = "";
+    } catch (err) {
+      console.error("Error from API:", err);
+    }
   } else {
     handleFetchData(currPage);
   }
