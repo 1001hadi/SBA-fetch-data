@@ -26,4 +26,6 @@
 
 ### This project was challenging for me and I struggled quite a bit to correctly access the API data and how to render it properly into my project, I learned a lot through the process and have gotten a lot more confident about programming with HTTP request with Axios and asynchronous code.
 
+## Note:
+
 ### Loading animation of this project was borrow from other project i had last year. src was: youtube video for animation.
