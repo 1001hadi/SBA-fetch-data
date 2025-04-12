@@ -1,4 +1,5 @@
 import { handleTableRow } from "./modules/tableRow.mjs";
+import { showAnimation, hideAnimation } from "./modules/animation.mjs";
 
 const tableBody = document.getElementById("table-body");
 const paginationEl = document.getElementById("pagination");
@@ -19,6 +20,7 @@ document.addEventListener("DOMContentLoaded", () => handleFetchData(currPage));
 async function handleFetchData(url) {
   // make sure clear existing data from table
   tableBody.innerHTML = "";
+  showAnimation();
   // fetch main url and collect data
   // make sure put them in try-catch block
   try {
@@ -44,6 +46,8 @@ async function handleFetchData(url) {
     handlePagination();
   } catch (err) {
     console.error("error from API:", err);
+  } finally {
+    hideAnimation();
   }
 }
 
@@ -131,14 +135,21 @@ async function handleSearchBtn() {
 
 async function handleSearch(searchResult) {
   tableBody.innerHTML = "";
-  for (const character of searchResult) {
-    // imported function here to create the table row for search
-    // make sure add await key word
-    // append the table row if existed
-    let tableRow = await handleTableRow(character);
-    if (tableRow) {
-      tableBody.appendChild(tableRow);
+  showAnimation();
+  try {
+    for (const character of searchResult) {
+      // imported function here to create the table row for search
+      // make sure add await key word
+      // append the table row if existed
+      let tableRow = await handleTableRow(character);
+      if (tableRow) {
+        tableBody.appendChild(tableRow);
+      }
     }
+  } catch (err) {
+    console.log("error from API", err);
+  } finally {
+    hideAnimation();
   }
 }
 
