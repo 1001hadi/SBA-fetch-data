@@ -117,8 +117,8 @@ async function handleSearchBtn() {
 
     try {
       while (nextUrl) {
-        const response = await fetch(nextUrl);
-        const data = await response.json();
+        const res = await axios.get(nextUrl);
+        const data = await res.data;
         searchedArr.push(...data.results);
         nextUrl = data.next;
       }
@@ -126,7 +126,7 @@ async function handleSearchBtn() {
       const result = searchedArr.filter((character) =>
         character.name.toLowerCase().includes(searchedChar)
       );
-      console.log(result);
+      // console.log(result);
 
       handleSearch(result);
       paginationEl.innerHTML = "";
@@ -140,7 +140,7 @@ async function handleSearchBtn() {
 
 // handle search function
 // clear table body content
-// after looping on entered search value
+// after looping on entered search values
 // fetch data again for the result of search
 // create new table row for the result
 // add the result to table body
@@ -149,12 +149,15 @@ async function handleSearch(searchResult) {
   tableBody.innerHTML = "";
   for (const character of searchResult) {
     try {
-      const [homeworldData, speciesData] = await Promise.all([
-        fetch(character.homeworld).then((res) => res.json()),
+      const [homeworldRes, speciesRes] = await Promise.all([
+        axios.get(character.homeworld),
         character.species.length > 0
-          ? fetch(character.species[0]).then((res) => res.json())
-          : Promise.resolve({ name: "unknown" }),
+          ? axios.get(character.species[0])
+          : { data: { name: "unknown" } },
       ]);
+
+      let homeworldData = homeworldRes.data;
+      let speciesData = speciesRes.data;
 
       const tableRow = document.createElement("tr");
       tableRow.innerHTML = `
@@ -167,7 +170,7 @@ async function handleSearch(searchResult) {
         `;
       tableBody.appendChild(tableRow);
     } catch (err) {
-      console.log("can't fetching data for character:", character.name, err);
+      console.log("can't fetching data for character you entered!", err);
     }
   }
 }
