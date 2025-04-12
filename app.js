@@ -18,39 +18,49 @@ async function handleFetchData(url) {
   // make sure clear existing data from table
   tableBody.innerHTML = "";
   // fetch main url and collect data
-  await fetch(url)
-    .then((response) => response.json())
-    .then((data) => {
-      // assign current page to main url
-      // assign next and previous vars to data
-      currPage = url;
-      nextPage = data.next;
-      prevPage = data.previous;
+  // make sure put them in try-catch block
+  try {
+    const res = await axios.get(url);
+    let data = res.data;
 
-      data.results.forEach((character) => {
-        // Fetch homeworld and species data with Promise.all
-        Promise.all([
-          fetch(character.homeworld).then((response) => response.json()),
-          character.species.length > 0
-            ? fetch(character.species[0]).then((response) => response.json())
-            : Promise.resolve({ name: "unknown" }),
-        ]).then(([homeworldData, speciesData]) => {
-          const tableRow = document.createElement("tr");
-          tableRow.innerHTML = `
-                      <td>${character.name}</td>
-                      <td>${character.birth_year}</td>
-                      <td>${character.height}</td>
-                      <td>${character.mass}kg</td>
-                      <td>${homeworldData.name}</td>
-                      <td>${speciesData.name}</td>
-                  `;
-          tableBody.appendChild(tableRow);
-        });
-      });
-      // make sure handle the pagination after data loaded
-      handlePagination();
-    })
-    .catch((err) => console.error("Error from API:", err));
+    // assign current page to main url
+    // assign next and previous vars to data
+    currPage = url;
+    nextPage = data.next;
+    prevPage = data.previous;
+
+    const characterPromise = data.results.map(async (character) => {
+      let [homeworldRes, speciesRes] = await Promise.all([
+        axios.get(character.homeworld),
+        character.species.length > 0
+          ? axios.get(character.species[0])
+          : { data: { name: "unknown" } },
+      ]);
+
+      let homeworldData = homeworldRes.data;
+      let speciesData = speciesRes.data;
+
+      const tableRow = document.createElement("tr");
+      tableRow.innerHTML = `
+                       <td>${character.name}</td>
+                       <td>${character.birth_year}</td>
+                       <td>${character.height}</td>
+                       <td>${character.mass}kg</td>
+                       <td>${homeworldData.name}</td>
+                       <td>${speciesData.name}</td>
+                   `;
+      return tableRow;
+    });
+    // loop over the table rows data and add them to table body
+    const tableRows = await Promise.all(characterPromise);
+    tableRows.forEach((rows) => {
+      tableBody.appendChild(rows);
+    });
+    // make sure handle the pagination after data loaded
+    handlePagination();
+  } catch (err) {
+    console.error("error from API:", err);
+  }
 }
 
 // handle pagination function
