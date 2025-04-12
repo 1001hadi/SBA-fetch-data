@@ -1,3 +1,5 @@
+import { handleTableRow } from "./modules/tableRow.mjs";
+
 const tableBody = document.getElementById("table-body");
 const paginationEl = document.getElementById("pagination");
 const searchBtn = document.getElementById("search-btn");
@@ -30,26 +32,8 @@ async function handleFetchData(url) {
     prevPage = data.previous;
 
     const characterPromise = data.results.map(async (character) => {
-      let [homeworldRes, speciesRes] = await Promise.all([
-        axios.get(character.homeworld),
-        character.species.length > 0
-          ? axios.get(character.species[0])
-          : { data: { name: "unknown" } },
-      ]);
-
-      let homeworldData = homeworldRes.data;
-      let speciesData = speciesRes.data;
-
-      const tableRow = document.createElement("tr");
-      tableRow.innerHTML = `
-                       <td>${character.name}</td>
-                       <td>${character.birth_year}</td>
-                       <td>${character.height}</td>
-                       <td>${character.mass}kg</td>
-                       <td>${homeworldData.name}</td>
-                       <td>${speciesData.name}</td>
-                   `;
-      return tableRow;
+      // return the imported function here to create table rows
+      return handleTableRow(character);
     });
     // loop over the table rows data and add them to table body
     const tableRows = await Promise.all(characterPromise);
@@ -148,29 +132,12 @@ async function handleSearchBtn() {
 async function handleSearch(searchResult) {
   tableBody.innerHTML = "";
   for (const character of searchResult) {
-    try {
-      const [homeworldRes, speciesRes] = await Promise.all([
-        axios.get(character.homeworld),
-        character.species.length > 0
-          ? axios.get(character.species[0])
-          : { data: { name: "unknown" } },
-      ]);
-
-      let homeworldData = homeworldRes.data;
-      let speciesData = speciesRes.data;
-
-      const tableRow = document.createElement("tr");
-      tableRow.innerHTML = `
-            <td>${character.name}</td>
-            <td>${character.birth_year}</td>
-            <td>${character.height}</td>
-            <td>${character.mass}kg</td>
-            <td>${homeworldData.name}</td>
-            <td>${speciesData.name}</td>
-        `;
+    // imported function here to create the table row for search
+    // make sure add await key word
+    // append the table row if existed
+    let tableRow = await handleTableRow(character);
+    if (tableRow) {
       tableBody.appendChild(tableRow);
-    } catch (err) {
-      console.log("can't fetching data for character you entered!", err);
     }
   }
 }
