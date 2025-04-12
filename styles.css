@@ -104,14 +104,14 @@ td {
   display: none;
   position: fixed;
   top: 50%;
-  left: 50%;
+  left: 45%;
   transform: translate(-50% -50%);
-  border: 5px solid #666;
-  border-top: 5px solid teal;
+  border: 10px solid #666;
+  border-top: 10px solid teal;
   border-radius: 50%;
-  height: 50px;
-  width: 50px;
-  animation: spin 1s linear infinite;
+  height: 100px;
+  width: 100px;
+  animation: spin 0.7s linear infinite;
 }
 
 @keyframes spin {
