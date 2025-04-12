@@ -141,3 +141,11 @@ async function handleSearch(searchResult) {
     }
   }
 }
+
+// for better user experience add enter functionality to input field
+// add event listener to input field and check if the key pressed was enter
+// then run the handle searchBtn function
+
+searchInput.addEventListener("keypress", (e) => {
+  e.key === "Enter" ? handleSearchBtn() : "";
+});
