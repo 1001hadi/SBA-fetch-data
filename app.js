@@ -115,7 +115,7 @@ async function handleSearchBtn() {
       handleSearch(result);
       paginationEl.innerHTML = "";
     } catch (err) {
-      console.error("Error from API:", err);
+      console.log("Error from API:", err);
     }
   } else {
     handleFetchData(currPage);
