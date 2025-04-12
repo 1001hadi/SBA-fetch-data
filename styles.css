@@ -122,3 +122,42 @@ td {
     transform: rotate(360deg);
   }
 }
+
+@media only screen and (max-width: 500px) {
+  .container {
+    width: 100%;
+    padding: 10px 3px;
+    margin-right: 10px;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  th,
+  td {
+    font-size: 0.6rem;
+    padding: 10px 5px;
+    white-space: nowrap;
+  }
+
+  #search input {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+  }
+
+  #pagination button,
+  #search button {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+  }
+
+  #load-animation {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 40%;
+    height: 50px;
+    width: 50px;
+  }
+}
